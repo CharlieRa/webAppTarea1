@@ -4,10 +4,31 @@
 var LocalStrategy   = require('passport-local').Strategy;
 
 // load up the user model
+//sqlite
+var fs = require("fs");
+var file = "users.db";
+var exists = fs.existsSync(file);
+var sqlite3 = require("sqlite3").verbose();
+var db = new sqlite3.Database(file);
+//fin sqlite
 var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
 var dbconfig = require('./database');
 var connection = mysql.createConnection(dbconfig.connection);
+
+db.serialize(function() {
+  if(!exists) {
+    db.run('\
+    CREATE TABLE `users`( \
+        `id` INT UNSIGNED NOT NULL, \
+        `username` VARCHAR(20) NOT NULL, \
+        `password` CHAR(60) NOT NULL, \
+            PRIMARY KEY (`id`), \
+        UNIQUE INDEX `id_UNIQUE` (`id` ASC), \
+        UNIQUE INDEX `username_UNIQUE` (`username` ASC) \
+    )');
+  }
+});
 
 connection.query('USE ' + dbconfig.database);
 // expose this function to our app using module.exports
