@@ -18,13 +18,12 @@ module.exports = function(app, passport) {
 		}),
         function(req, res) {
             console.log("hello");
-
             if (req.body.remember) {
               req.session.cookie.maxAge = 1000 * 60 * 3;
             } else {
               req.session.cookie.expires = false;
             }
-        res.redirect('/');
+        //  res.redirect('/');
     });
 
 	/* Vista Registro */
@@ -49,29 +48,30 @@ module.exports = function(app, passport) {
 	// 		layout : 'profileLayout'
 	// 	});
 	// });
-	app.get('/profile', function(req, res) {
+	app.get('/profile', isLoggedIn, function(req, res)
+	{
+		console.log(req.user);
 		res.render('profile', {
-			// user : req.user, // get the user out of session and pass to template
-			username : 'Carlos',
+			user : req.user,
 			layout : 'profileLayout'
 		});
 	});
 
 	/* Logout */
-	app.get('/logout', function(req, res) {
+	app.get('/logout', function(req, res)
+	{
 		req.logout();
 		res.redirect('/');
 	});
 };
 
 // route middleware to make sure
-function isLoggedIn(req, res, next) {
+function isLoggedIn(req, res, next)
+{
 	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated())
 		return next();
 	// if they aren't redirect them to the home page
-	res.redirect('/',
-	{
-		error : req.flash('No puede acceder, area restingida. Debe loguearse primero.')
-	});
+	// req.flash('message', 'Constraseña incorrecta');
+	res.redirect('/');
 }

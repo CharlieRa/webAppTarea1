@@ -84,4 +84,5 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(8888);
+console.log("Puerto 8888")
 module.exports = app;
