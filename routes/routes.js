@@ -17,7 +17,7 @@ module.exports = function(app, passport) {
             failureFlash : true // allow flash messages
 		}),
         function(req, res) {
-            console.log("hello");
+            console.log("lala");
             if (req.body.remember) {
               req.session.cookie.maxAge = 1000 * 60 * 3;
             } else {
@@ -33,7 +33,8 @@ module.exports = function(app, passport) {
 	});
 
 	/* Procesar info de registro */
-	app.post('/signup', passport.authenticate('local-signup', {
+	app.post('/signup', passport.authenticate('local-signup',
+	{
 		successRedirect : '/profile', // redirect to the secure profile section
 		failureRedirect : '/signup', // redirect back to the signup page if there is an error
 		failureFlash : true // allow flash messages
@@ -50,7 +51,6 @@ module.exports = function(app, passport) {
 	// });
 	app.get('/profile', isLoggedIn, function(req, res)
 	{
-		console.log(req.user);
 		res.render('profile', {
 			user : req.user,
 			layout : 'profileLayout'
@@ -68,6 +68,7 @@ module.exports = function(app, passport) {
 // route middleware to make sure
 function isLoggedIn(req, res, next)
 {
+	// console.log(req);
 	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated())
 		return next();

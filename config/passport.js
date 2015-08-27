@@ -63,7 +63,7 @@ module.exports = function(passport) {
         // });
         db.each("SELECT * FROM users WHERE id = ? ",[id], function(err, row) {
           // console.log("lala: "+row.id + ": ");
-          done(err, row.id);
+          done(err, row);
         });
     });
 
@@ -116,12 +116,12 @@ module.exports = function(passport) {
                   db.serialize(function(){
                   db.run(insertQuery,[newUserMysql.username, newUserMysql.password], function(error)
                   {
-                      console.log("error:"+error);
+                      // console.log("error:"+error);
                   });
                   db.each("SELECT id FROM users ORDER BY id desc LIMIT 1;", function(error, row)
                   {
                     newUserMysql.id = row.id;
-                    console.log("user: "+newUserMysql.id);
+                    console.log("user: "+newUserMysql);
                     return done(null, newUserMysql);
                   });
                   });
@@ -153,6 +153,7 @@ module.exports = function(passport) {
                 if (!bcrypt.compareSync(password, rows[0].password))
                     return done(null, false, req.flash('loginMessage', 'Constraseña incorrecta')); // create the loginMessage and save it to session as flashdata
                 // all is well, return successful user
+                // console.log(rows[0]);
                 return done(null, rows[0]);
             });
         })
